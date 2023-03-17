@@ -1,3 +1,10 @@
-from django.shortcuts import render
+from .models import Todo
+from django.http import HttpRequest, JsonResponse
 
-# Create your views here.
+def get_all_task(request: HttpRequest)->JsonResponse:
+    tasks = Todo.objects.all()
+    result = []
+    for task in tasks:
+        result.append(task.to_dict())
+
+    return JsonResponse({'result':result})
