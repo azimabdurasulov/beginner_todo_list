@@ -19,9 +19,9 @@ def get_all_task(request: HttpRequest)->JsonResponse:
         created_at = todos.get('created_at',False)
         updated_at = todos.get('updated_at', False)
 
-        if task:
+        if task == False:
             return JsonResponse({'status': 'task field is required'})
-        if description:
+        if description == False:
             return JsonResponse({"status": 'description field is required'})
         
         tasks = Todo(
@@ -66,4 +66,13 @@ def get_task_id(request:HttpRequest, pk:int)->JsonResponse:
             todos.updated_at=updated_at
 
         todos.save()
-    return JsonResponse(todos.to_dict())
+        return JsonResponse(todos.to_dict())
+
+def delete_task_id(request: HttpRequest, pk: int) -> JsonResponse:
+    if request.method == 'POST':
+        try:
+            tasks = Todo.objects.get(id=pk)
+            tasks.delete()
+            return JsonResponse(tasks.to_dict())
+        except:
+            return JsonResponse({"status": "object doesn't exist"})
