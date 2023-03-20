@@ -1,5 +1,5 @@
 from .models import Todo
-from django.http import HttpRequest, JsonResponse
+from django.http import HttpRequest, JsonResponse, HttpResponse
 import json
 
 def get_all_task(request: HttpRequest)->JsonResponse:
@@ -76,3 +76,27 @@ def delete_task_id(request: HttpRequest, pk: int) -> JsonResponse:
             return JsonResponse(tasks.to_dict())
         except:
             return JsonResponse({"status": "object doesn't exist"})
+        
+def completed_task(request: HttpRequest):
+    try:
+        tasks = Todo.objects.all()
+        result = []
+        for task in tasks:
+            if task.completed:
+                result.append(task.to_dict())
+
+        return JsonResponse({'result':result})
+    except:
+        return HttpResponse('Hello World!')
+
+def incompleted_task(request: HttpRequest):
+    try:
+        tasks = Todo.objects.all()
+        result = []
+        for task in tasks:
+            if task.completed == False:
+                result.append(task.to_dict())
+
+        return JsonResponse({'result':result})
+    except:
+            return HttpResponse('Hello World!')
